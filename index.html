@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pathfinder Lite</title>
+<style>
+  body{font-family:sans-serif;max-width:480px;margin:0 auto;padding:16px;background:#eaf1f2;color:#12303a}
+  input{padding:10px;width:65%;border:1px solid #aac;border-radius:8px}
+  button{padding:10px 14px;background:#0f8b8d;color:#fff;border:0;border-radius:8px}
+  li{background:#fff;margin:8px 0;padding:10px;border-radius:8px;list-style:none}
+  .done{text-decoration:line-through;color:#888}
+  .bar{height:10px;background:#cfdfe2;border-radius:9px;margin:12px 0}
+  #fill{height:100%;width:0;background:#0f8b8d;border-radius:9px}
+</style>
+</head>
+<body>
+  <h2>Pathfinder Lite</h2>
+  <input id="t" placeholder="Add a step">
+  <button onclick="add()">Add</button>
+  <div class="bar"><div id="fill"></div></div>
+  <p id="p">0% done</p>
+  <ul id="list" style="padding:0"></ul>
+
+<script>
+var steps = [];
+function add(){
+  var v = document.getElementById("t").value.trim();
+  if(!v) return;
+  steps.push({t:v, d:false});
+  document.getElementById("t").value = "";
+  show();
+}
+function tick(i){ steps[i].d = !steps[i].d; show(); }
+function del(i){ steps.splice(i,1); show(); }
+function show(){
+  var html = "";
+  var done = 0;
+  for(var i=0;i<steps.length;i++){
+    if(steps[i].d) done++;
+    html += '<li class="'+(steps[i].d?'done':'')+'">'
+      + '<input type="checkbox" style="width:auto" '+(steps[i].d?'checked':'')+' onclick="tick('+i+')"> '
+      + steps[i].t
+      + ' <button style="float:right;padding:2px 8px;background:#c33" onclick="del('+i+')">x</button></li>';
+  }
+  document.getElementById("list").innerHTML = html;
+  var pct = steps.length ? Math.round(done/steps.length*100) : 0;
+  document.getElementById("fill").style.width = pct + "%";
+  document.getElementById("p").innerText = pct + "% done";
+}
+</script>
+</body>
+</html>
